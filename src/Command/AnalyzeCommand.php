@@ -35,12 +35,16 @@ class AnalyzeCommand extends Command
             return Command::SUCCESS;
         }
         
+        $rows = [];
+
         foreach ($detected as $detection) {
             $line = $detection['line'];
             foreach ($detection['number'] as $number) {
-                $io->text("Magic number detected: number $number at line $line");
+                $rows[] = [$line, $number];
             }
         }
+
+        $io->table(["Line", "Number"], $rows);
 
         $numberDetections = sizeof($detected);
         $io->error("Found $numberDetections magic numbers in your code");
