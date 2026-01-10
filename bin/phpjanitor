@@ -7,4 +7,5 @@ require __DIR__ . '/../vendor/autoload.php';
 use Symfony\Component\Console\Application;
 
 $application = new Application('PHP Janitor', '1.0.0');
+$application->add(new \PHPJanitor\Command\AnalyzeCommand());
 $application->run();
