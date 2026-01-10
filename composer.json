@@ -1,0 +1,10 @@
+{
+    "autoload": {
+        "psr-4": {
+            "PHPJanitor\\": "src/"
+        }
+    },
+    "require": {
+        "symfony/console": "^6.4"
+    }
+}
