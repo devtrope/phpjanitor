@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use PHPJanitor\Analyzers\MagicNumberAnalyzer;
 
 class AnalyzeCommand extends Command
 {
@@ -25,7 +26,25 @@ class AnalyzeCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $path = $input->getArgument('path');
-        $io->success("Analyzing PHP code in path: $path");
+
+        $analyzer = new MagicNumberAnalyzer();
+        $detected = $analyzer->scan($path);
+
+        if (empty($detected)) {
+            $io->success("No magic numbers detected");
+            return Command::SUCCESS;
+        }
+        
+        foreach ($detected as $detection) {
+            $line = $detection['line'];
+            foreach ($detection['number'] as $number) {
+                $io->text("Magic number detected: number $number at line $line");
+            }
+        }
+
+        $numberDetections = sizeof($detected);
+        $io->error("Found $numberDetections magic numbers in your code");
+
         return Command::SUCCESS;
     }
 }
